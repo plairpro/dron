@@ -4,9 +4,9 @@ export function fresh(){return {mode:'playing',y:0,vy:0,distance:0,lives:3,charg
 export function crash(s){if(s.mode!=='playing')return;s.mode='crashing';s.vy=Math.min(s.vy,0);s.crashTime=0;}
 export function damage(s,side=0){if(s.mode!=='playing'||s.invulnerable>0)return false;s.lives--;s.hits++;s.invulnerable=1.65;if(s.lives<=0)crash(s);else{s.vy=side===1?-2.6:side===-1?3.8:-s.vy*.6;s.y=Math.max(FLOOR+RADIUS+.1,Math.min(CEILING-RADIUS-.1,s.y));}return true;}
 export function updateThreats(s,dt,obstacles){if(s.mode!=='playing')return;for(const o of obstacles){if(!o.special){if(o.kind==='bat'){o.age=(o.age||0)+dt;o.y=o.baseY+Math.sin(o.age*2+o.phase)*.8;}continue;}
- if(!o.stage&&o.x-s.distance<speed(s)*1.9&&o.x>s.distance){o.stage='warning';o.timer=0;}
- if(o.stage==='warning'){o.timer+=dt;if(o.timer>=.75){o.stage='active';o.timer=0;}}
- else if(o.stage==='active'){o.timer+=dt;if(o.kind==='rock'){o.drop=Math.max(-14,-4.4*o.timer*o.timer);}else{o.y=Math.min(4.7,o.baseY+4.2*o.timer);}}
+ if(!o.stage&&o.x-s.distance<speed(s)*(o.kind==='rock'?2.2:2.1)&&o.x>s.distance){o.stage='warning';o.timer=0;}
+ if(o.stage==='warning'){o.timer+=dt;if(o.timer>=(o.kind==='rock'?1:.8)){o.stage='active';o.timer=0;}}
+ else if(o.stage==='active'){o.timer+=dt;if(o.kind==='rock'){o.drop=Math.max(-14,-5.6*o.timer*o.timer);}else{o.vx=Math.min(7,(o.vx||0)+5*dt);o.x-=o.vx*dt;o.y=o.baseY+Math.sin(o.timer*18+o.phase)*.045;}}
 }}
 export function step(s,dt,thrust,obstacles=[]){let hit=false;if(s.mode==='playing'){
  s.distance+=dt*speed(s);updateThreats(s,dt,obstacles);
