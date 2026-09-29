@@ -3,3 +3,7 @@
 #hud button:hover{background:#d9e8ec;color:#0b141b;border-color:#d9e8ec}
 
 #end:focus{outline:none}
+
+html,body,#game,#game *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}html,body{overscroll-behavior:none}#game{touch-action:none}#impact{pointer-events:none}@media(pointer:coarse){#paused,#end{backdrop-filter:none;-webkit-backdrop-filter:none}}
+
+.energy{order:0}#charge{display:flex;gap:7px;margin-top:15px}#charge i{width:31px;height:7px;background:var(--accent);box-shadow:0 0 15px #4ae97140;border-radius:2px}#charge i.lost{background:#53616c35;box-shadow:none}#charge.low i:not(.lost){background:#ffc278}#hud{gap:24px}@media(max-width:600px){#hud{padding:22px 14px;gap:12px}.eyebrow{font-size:8px;letter-spacing:.1em}#lives,#charge{gap:4px}#lives i,#charge i{width:15px}.instrument strong{font-size:22px}#hud #pause{width:34px;height:34px}.unit{margin-left:3px}.instrument{min-width:58px}}
