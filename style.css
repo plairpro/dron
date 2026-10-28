@@ -22,3 +22,5 @@ html,body,#game,#game *{-webkit-user-select:none;user-select:none;-webkit-touch-
 @media(prefers-reduced-motion:reduce){.slogan-lines span{animation:none;transform:skewY(-13deg)}}
 
 #sound svg{display:block;width:22px;height:22px;margin:auto}#sound .sound-off{display:none}#sound.is-muted .sound-waves{display:none}#sound.is-muted .sound-off{display:block}#paused .panel h2{margin:0 0 28px;line-height:1.2}
+
+#charge-flash{position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(ellipse at 40% 50%,rgba(200,255,220,.22),rgba(120,255,176,.06) 55%,transparent 85%)}#charge-flash.active{animation:charge-flash .35s ease-out}@keyframes charge-flash{0%{opacity:0}14%{opacity:1}100%{opacity:0}}@media(prefers-reduced-motion:reduce){#charge-flash.active{animation-duration:.01s}}

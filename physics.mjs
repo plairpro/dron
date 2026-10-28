@@ -12,7 +12,7 @@ export function updateThreats(s,dt,obstacles){if(s.mode!=='playing')return;for(c
 export function step(s,dt,thrust,obstacles=[]){let hit=false;if(s.mode==='playing'){
  s.distance+=dt*speed(s);updateThreats(s,dt,obstacles);
  // Consume whole bars on distance milestones. Pickups add one bar, capped at three.
- while(s.distance>=s.nextDrain){s.charge=Math.max(0,s.charge-1);s.nextDrain+=150;}
+ while(s.distance>=s.nextDrain){s.charge=Math.max(0,s.charge-1);s.nextDrain+=200;}
  for(const o of obstacles)if(o.kind==='battery'&&!o.collected&&Math.abs(o.x-s.distance)<.95&&Math.abs(s.y-o.y)<.95){o.collected=true;s.charge=Math.min(3,s.charge+1);}
  if(s.charge===0){crash(s);return false;}
  s.invulnerable=Math.max(0,s.invulnerable-dt);s.vy+=(thrust?12:-8.5)*dt;s.vy*=Math.exp(-.85*dt);s.vy=Math.max(-5.4,Math.min(4.8,s.vy));s.y+=s.vy*dt;
