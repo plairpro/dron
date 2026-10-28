@@ -3,6 +3,10 @@
   const messages = {
   "ru": {
     "title": "Дрон",
+    "slogan1": "Исследуйте опасные",
+    "slogan2": "глубины подземных шахт",
+    "slogan3": "одной кнопкой",
+    "sloganLabel": "Исследуйте опасные глубины подземных шахт одной кнопкой",
     "hint": "Жми пробел или тапай по экрану для взлёта",
     "start": "Полетели",
     "shield": "ЗАЩИТА",
@@ -26,6 +30,10 @@
   },
   "en": {
     "title": "Drone",
+    "slogan1": "Explore the dangerous",
+    "slogan2": "depths of underground mines",
+    "slogan3": "with one button",
+    "sloganLabel": "Explore the dangerous depths of underground mines with one button",
     "hint": "Hold Space or touch the screen to fly",
     "start": "Let's fly",
     "shield": "SHIELD",

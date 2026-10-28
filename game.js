@@ -6,7 +6,7 @@ const $=s=>document.querySelector(s), canvas=$('#scene');
 const mobile=matchMedia('(pointer:coarse)').matches||navigator.maxTouchPoints>1;
 let renderScale=Math.min(devicePixelRatio,mobile?1:1.65),frameBudget=0,frameSamples=0,lastScan=-1;
 let renderer;try{renderer=new T.WebGLRenderer({canvas,antialias:!mobile,powerPreference:'high-performance'});}catch(e){$('#intro').hidden=true;$('#error').hidden=false;throw e;}
-renderer.setPixelRatio(renderScale);renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;renderer.shadowMap.enabled=!mobile;renderer.shadowMap.type=T.PCFSoftShadowMap;
+renderer.setPixelRatio(renderScale);renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.55;renderer.shadowMap.enabled=!mobile;renderer.shadowMap.type=T.PCFSoftShadowMap;
 const scene=new T.Scene();scene.background=new T.Color('#060d13');scene.fog=new T.FogExp2('#080f15',.038);
 const camera=new T.PerspectiveCamera(40,innerWidth/innerHeight,.1,110);camera.position.set(0,1.1,23.6);camera.lookAt(0,0,0);
 const world=new T.Group();scene.add(world);
@@ -47,7 +47,7 @@ for(let z of [-.68,.68]){mesh(new T.BoxGeometry(.14,.2,.42),black,drone,1.06,.1,
 let camBody=mesh(new T.CylinderGeometry(.1,.1,.14,16),black,drone,.39,-.13,.05);camBody.rotation.z=Math.PI/2;let lens=mesh(new T.CylinderGeometry(.065,.065,.016,16),new T.MeshStandardMaterial({color:0x31556a,metalness:.95,roughness:.08}),drone,.47,-.13,.05);lens.rotation.z=Math.PI/2;
 mesh(new T.SphereGeometry(.035,8,6),new T.MeshBasicMaterial({color:0x49b9ff}),drone,-.4,.14,.31);mesh(new T.SphereGeometry(.027,8,6),new T.MeshBasicMaterial({color:0xff4c27}),drone,-.8,.12,.6);
 const spot=new T.SpotLight(0xffe2a4,240,34,.72,.65,.85);spot.position.set(1.2,.2,.2);spot.target.position.set(15,0,-3.4);drone.add(spot,spot.target);spot.castShadow=true;spot.shadow.mapSize.set(1024,1024);spot.shadow.bias=-.001;spot.shadow.normalBias=.05;
-const halo=new T.PointLight(0xffdfab,18,12,1.35);halo.position.set(.7,.7,1.7);drone.add(halo);const rim=new T.DirectionalLight(0x9db6c9,1.4);rim.position.set(-5,8,5);scene.add(rim);scene.add(new T.HemisphereLight(0x586d7b,0x292017,.75));
+const halo=new T.PointLight(0xffdfab,18,12,1.35);halo.position.set(.7,.7,1.7);drone.add(halo);const rim=new T.DirectionalLight(0x9db6c9,1.4);rim.position.set(-5,8,5);scene.add(rim);scene.add(new T.HemisphereLight(0x82969f,0x51463b,1.45));
 // Warm reflected headlight keeps near obstacles readable without flattening the cave.
 const bounce=new T.PointLight(0xffdfa8,28,18,1.15);bounce.position.set(4,.1,-.6);drone.add(bounce);
 const navGlowTexture=(()=>{const c=document.createElement('canvas');c.width=c.height=64;const ctx=c.getContext('2d'),g=ctx.createRadialGradient(32,32,0,32,32,32);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.12,'rgba(255,255,255,.9)');g.addColorStop(.35,'rgba(255,255,255,.25)');g.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=g;ctx.fillRect(0,0,64,64);return new T.CanvasTexture(c);})();
