@@ -7,6 +7,7 @@ export function updateThreats(s,dt,obstacles){if(s.mode!=='playing')return;for(c
  if(!o.stage&&o.x-s.distance<speed(s)*(o.kind==='rock'?3.8:2.1)&&o.x>s.distance){o.stage='warning';o.timer=0;}
  if(o.stage==='warning'){o.timer+=dt;if(o.timer>=(o.kind==='rock'?1.7:.8)){o.stage='active';o.timer=0;}}
  else if(o.stage==='active'){o.timer+=dt;if(o.kind==='rock'){o.drop=Math.max(FLOOR-CEILING+o.height,-5.6*o.timer*o.timer);if(o.drop<=FLOOR-CEILING+o.height){o.stage='landed';o.timer=0;}}else{o.vx=Math.min(7,(o.vx||0)+5*dt);o.x-=o.vx*dt;o.y=o.baseY+Math.sin(o.timer*18+o.phase)*.045;}}
+ else if(o.stage==='landed'){o.timer+=dt;}
 }}
 export function step(s,dt,thrust,obstacles=[]){let hit=false;if(s.mode==='playing'){
  s.distance+=dt*speed(s);updateThreats(s,dt,obstacles);
