@@ -12,11 +12,11 @@ html,body,#game,#game *{-webkit-user-select:none;user-select:none;-webkit-touch-
 
 .studio-badge{position:fixed;z-index:10;left:max(8vw,env(safe-area-inset-left));bottom:max(19.5vh,env(safe-area-inset-bottom));width:clamp(120px,13vw,180px);display:block;touch-action:manipulation;border-radius:10px;line-height:0}.studio-badge img{display:block;width:100%;height:auto}.studio-badge:focus-visible{outline:2px solid var(--accent);outline-offset:4px}@media(max-width:600px){.studio-badge{left:max(7vw,env(safe-area-inset-left));bottom:max(14vh,env(safe-area-inset-bottom));width:120px}}
 
-.intro-slogan{position:absolute;left:45%;top:42%;width:52%;pointer-events:none;perspective:900px}
+.intro-slogan{position:absolute;left:45%;top:39.5%;width:52%;pointer-events:none;perspective:900px}
 .slogan-lines span{display:block;width:max-content;max-width:100%;font-size:clamp(26px,3.9vw,74px);font-weight:800;line-height:1.55;letter-spacing:-.05em;white-space:nowrap;color:#f5fbf7;text-shadow:2px 3px 0 #164b2a,4px 6px 0 #0b2315,0 9px 24px #000b;transform-origin:left center;animation:layered-shift 5.4s ease-in-out infinite}
 .slogan-lines span:nth-child(2){color:var(--accent);animation-delay:-1.8s}
 .slogan-lines span:nth-child(3){animation-delay:-3.6s}
 @keyframes layered-shift{0%,100%{transform:translateX(0) skew(0deg,-13deg) scaleY(1)}50%{transform:translateX(18px) skew(22deg,-13deg) scaleY(.78)}}
 @media(max-width:600px){.intro-slogan{left:8vw;top:61%;width:87vw}.slogan-lines span{font-size:clamp(18px,5vw,30px);line-height:1.42}.studio-badge{bottom:max(4vh,env(safe-area-inset-bottom))}}
-@media(max-height:500px) and (min-width:601px){.intro-slogan{top:38%}.slogan-lines span{font-size:clamp(20px,3vw,42px);line-height:1.35}}
+@media(max-height:500px) and (min-width:601px){.intro-slogan{top:35.5%}.slogan-lines span{font-size:clamp(20px,3vw,42px);line-height:1.35}}
 @media(prefers-reduced-motion:reduce){.slogan-lines span{animation:none;transform:skewY(-13deg)}}
