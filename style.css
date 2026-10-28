@@ -20,3 +20,5 @@ html,body,#game,#game *{-webkit-user-select:none;user-select:none;-webkit-touch-
 @media(max-width:600px){.intro-slogan{left:8vw;top:61%;width:87vw}.slogan-lines span{font-size:clamp(18px,5vw,30px);line-height:1.42}.studio-badge{bottom:max(4vh,env(safe-area-inset-bottom))}}
 @media(max-height:500px) and (min-width:601px){.intro-slogan{top:35.5%}.slogan-lines span{font-size:clamp(20px,3vw,42px);line-height:1.35}}
 @media(prefers-reduced-motion:reduce){.slogan-lines span{animation:none;transform:skewY(-13deg)}}
+
+#sound svg{display:block;width:22px;height:22px;margin:auto}#sound .sound-off{display:none}#sound.is-muted .sound-waves{display:none}#sound.is-muted .sound-off{display:block}#paused .panel h2{margin:0 0 28px;line-height:1.2}
