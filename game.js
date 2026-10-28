@@ -136,7 +136,7 @@ function keyId(e){return e.code||String(e.key||e.keyCode).toLowerCase();}
 function flightTarget(e){return !e.target.closest('button,.screen');}
 function beginPointer(e){if(mode!=='playing'||paused||!flightTarget(e))return;if(e.cancelable)e.preventDefault();flightPointers.add(e.pointerId);syncFlightInput();tapUntil=time+.18;try{gameElement.setPointerCapture(e.pointerId);}catch{}}
 function endPointer(e){flightPointers.delete(e.pointerId);syncFlightInput();}
-window.addEventListener('keydown',e=>{if(isLiftKey(e)){e.preventDefault();if(mode==='playing'&&!paused){flightKeys.add(keyId(e));syncFlightInput();tapUntil=time+.16;}}if(e.code==='Escape'&&!e.repeat)pause();});
+window.addEventListener('keydown',e=>{const isActionKey=e.code==='KeyA'||['a','ф'].includes((e.key||'').toLowerCase())||e.keyCode===65;if(isActionKey&&(mode==='intro'||!$('#end').hidden)){e.preventDefault();if(!e.repeat){if(mode==='intro')start();else returnToIntro();}return;}if(isLiftKey(e)){e.preventDefault();if(mode==='playing'&&!paused){flightKeys.add(keyId(e));syncFlightInput();tapUntil=time+.16;}}if(e.code==='Escape'&&!e.repeat)pause();});
 window.addEventListener('keyup',e=>{if(isLiftKey(e)){e.preventDefault();flightKeys.delete(keyId(e));syncFlightInput();}});
 gameElement.addEventListener('pointerdown',beginPointer,{passive:false});
 window.addEventListener('pointerup',endPointer);
