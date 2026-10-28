@@ -12,7 +12,9 @@ const camera=new T.PerspectiveCamera(40,innerWidth/innerHeight,.1,110);camera.po
 const world=new T.Group();scene.add(world);
 let time=0,mode='intro',state=fresh(),held=false,tapUntil=0,paused=false,shake=0,worldOffset=0,heroBlend=1,lastTime=0,muted=false;
 const music=$('#music');music.volume=.12;music.muted=muted;let backgrounded=document.hidden;
-function ensureMusic(){if(!backgrounded&&music.paused)music.play().catch(()=>{});}
+let musicFx;
+function initMusicEffects(){if(musicFx)return;try{const ctx=new AudioContext(),source=ctx.createMediaElementSource(music),filter=ctx.createBiquadFilter(),dry=ctx.createGain(),wet=ctx.createGain(),reverb=ctx.createConvolver(),output=ctx.createGain(),length=Math.floor(ctx.sampleRate*1.1),impulse=ctx.createBuffer(2,length,ctx.sampleRate);for(let channel=0;channel<2;channel++){const data=impulse.getChannelData(channel);let smoothed=0;for(let n=0;n<length;n++){smoothed=smoothed*.55+(Math.random()*2-1)*.45;data[n]=smoothed*Math.pow(1-n/length,3);}}filter.type='lowpass';filter.frequency.value=3200;filter.Q.value=.5;reverb.buffer=impulse;dry.gain.value=1;wet.gain.value=.12;output.gain.value=muted||backgrounded?0:1;source.connect(filter);filter.connect(dry);filter.connect(reverb);dry.connect(output);reverb.connect(wet);wet.connect(output);output.connect(ctx.destination);musicFx={ctx,output};}catch(e){}}
+function ensureMusic(event){if(backgrounded)return;if(!musicFx&&event?.isTrusted)initMusicEffects();if(musicFx&&musicFx.ctx.state==='suspended')musicFx.ctx.resume().catch(()=>{});if(music.paused)music.play().catch(()=>{});}
 function updateMusic(dt){const target=mode==='playing'&&state.mode==='playing'&&!paused?.24:.12;music.volume+=(target-music.volume)*Math.min(1,dt*3);}
 window.addEventListener('pointerdown',ensureMusic,{passive:true});window.addEventListener('keydown',ensureMusic);
 ensureMusic();
@@ -132,7 +134,7 @@ function updateHUD(){if(lastHudDistance===Math.floor(state.distance)&&lastHudLiv
 function start(){music.currentTime=0;ensureMusic();for(const o of obstacles)disposeObject(o.group);obstacles.length=0;nextObstacle=16;lastTallX=-100;lastSpecialX=-100;nextBattery=rand(110,150);nextSpecial=rand(40,50);specialKind='rock';nextPassage=110;seed=(Math.random()*4294967296)>>>0;state=fresh();mode='playing';clearFlightInput();tapUntil=0;paused=false;heroBlend=0;worldOffset=0;$('#intro').hidden=true;$('#end').hidden=true;$('#paused').hidden=true;$('#hud').hidden=false;$('#start').blur();$('#restart').blur();initAudio();updateHUD();}
 function pause(automatic=false){if(mode!=='playing'||state.mode!=='playing')return;paused=!paused;clearFlightInput();$('#paused').hidden=!paused;if(audio)audio.gain.gain.setTargetAtTime(paused?0:.3,audio.ctx.currentTime,.1);if(paused&&!automatic)$('#resume').focus({preventScroll:true});}
 function returnToIntro(){for(const o of obstacles)disposeObject(o.group);obstacles.length=0;mode='intro';state=fresh();clearFlightInput();paused=false;worldOffset=0;drone.visible=true;$('#end').hidden=true;$('#hud').hidden=true;$('#paused').hidden=true;$('#intro').hidden=false;if(audio)audio.gain.gain.setTargetAtTime(0,audio.ctx.currentTime,.1);$('#start').focus({preventScroll:true});}
-$('#start').onclick=start;$('#restart').onclick=returnToIntro;$('#pause').onclick=()=>pause();$('#resume').onclick=()=>pause();$('#sound').onclick=()=>{muted=!muted;music.muted=muted;if(audio)audio.master.gain.value=muted||backgrounded?0:.48;$('#sound').classList.toggle('is-muted',muted);$('#sound').setAttribute('aria-label',t(muted?'soundOn':'soundOff'));};
+$('#start').onclick=start;$('#restart').onclick=returnToIntro;$('#pause').onclick=()=>pause();$('#resume').onclick=()=>pause();$('#sound').onclick=()=>{muted=!muted;music.muted=muted;if(musicFx)musicFx.output.gain.value=muted||backgrounded?0:1;if(audio)audio.master.gain.value=muted||backgrounded?0:.48;$('#sound').classList.toggle('is-muted',muted);$('#sound').setAttribute('aria-label',t(muted?'soundOn':'soundOff'));};
 function isLiftKey(e){return e.code==='Space'||e.code==='KeyA'||[' ','a','ф'].includes((e.key||'').toLowerCase())||e.keyCode===32||e.keyCode===65;}
 // Track each input independently: lifting one finger must not cancel another held input.
 const flightKeys=new Set(),flightPointers=new Set(),gameElement=$('#game');
@@ -151,8 +153,8 @@ gameElement.addEventListener('lostpointercapture',endPointer);
 // Safari needs prefixed CSS plus cancelled native touch gestures to suppress text selection/callouts.
 for(const type of ['touchstart','touchmove'])gameElement.addEventListener(type,e=>{if(mode==='playing'&&!paused&&flightTarget(e)&&e.cancelable)e.preventDefault();},{passive:false});
 for(const type of ['contextmenu','selectstart','dragstart'])gameElement.addEventListener(type,e=>e.preventDefault());
-function silenceInBackground(){if(backgrounded)return;backgrounded=true;clearFlightInput();if(mode==='playing'&&!paused)pause(true);music.pause();if(audio)audio.master.gain.value=0;}
-function restoreForegroundAudio(){if(document.hidden||!backgrounded)return;backgrounded=false;if(audio)audio.master.gain.value=muted?0:.48;ensureMusic();}
+function silenceInBackground(){if(backgrounded)return;backgrounded=true;clearFlightInput();if(mode==='playing'&&!paused)pause(true);music.pause();if(musicFx)musicFx.output.gain.value=0;if(audio)audio.master.gain.value=0;}
+function restoreForegroundAudio(){if(document.hidden||!backgrounded)return;backgrounded=false;if(musicFx)musicFx.output.gain.value=muted?0:1;if(audio)audio.master.gain.value=muted?0:.48;ensureMusic();}
 window.addEventListener('blur',silenceInBackground);window.addEventListener('focus',restoreForegroundAudio);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)silenceInBackground();else if(document.hasFocus())restoreForegroundAudio();});
 function resize(){aspect=innerWidth/innerHeight;camera.aspect=aspect;camera.position.z=aspect<.8?30:23.6;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);}window.addEventListener('resize',resize);resize();
