@@ -1,5 +1,5 @@
 import * as T from './three.module.js';
-import {fresh,step,FLOOR,CEILING} from './physics.mjs?v=charge-interval-1';
+import {fresh,step,FLOOR,CEILING} from './physics.mjs?v=battery-speed-1';
 import {createLidarTracer} from './lidar-ray.mjs';
 const {t}=window.DronI18n;
 const $=s=>document.querySelector(s), canvas=$('#scene');

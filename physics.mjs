@@ -1,6 +1,6 @@
 export const FLOOR=-5.25, CEILING=5.25, RADIUS=.48;
-export const speed=s=>Math.min(7.1,4.2+s.distance*.004);
-export function fresh(){return {mode:'playing',y:0,vy:0,distance:0,lives:3,charge:3,nextDrain:100,invulnerable:1.8,crashTime:0,landed:false,hits:0};}
+export const speed=s=>Math.min(7.1,4.2+s.distance*.004)+(s.batteryBoost||0);
+export function fresh(){return {mode:'playing',y:0,vy:0,distance:0,batteriesCollected:0,batteryBoost:0,lives:3,charge:3,nextDrain:100,invulnerable:1.8,crashTime:0,landed:false,hits:0};}
 export function crash(s){if(s.mode!=='playing')return;s.mode='crashing';s.vy=Math.min(s.vy,0);s.crashTime=0;}
 export function damage(s,side=0){if(s.mode!=='playing'||s.invulnerable>0)return false;s.lives--;s.hits++;s.invulnerable=1.65;if(s.lives<=0)crash(s);else{s.vy=side===1?-2.6:side===-1?3.8:-s.vy*.6;s.y=Math.max(FLOOR+RADIUS+.1,Math.min(CEILING-RADIUS-.1,s.y));}return true;}
 export function updateThreats(s,dt,obstacles){if(s.mode!=='playing')return;for(const o of obstacles){if(!o.special){if(o.kind==='bat'){o.age=(o.age||0)+dt;o.y=o.baseY+Math.sin(o.age*2+o.phase)*.8;}continue;}
@@ -10,10 +10,12 @@ export function updateThreats(s,dt,obstacles){if(s.mode!=='playing')return;for(c
  else if(o.stage==='landed'){o.timer+=dt;}
 }}
 export function step(s,dt,thrust,obstacles=[]){let hit=false;if(s.mode==='playing'){
+ // Each pickup adds 5% of initial speed, eased in over about two seconds.
+ s.batteryBoost+=(s.batteriesCollected*.21-s.batteryBoost)*(1-Math.exp(-dt*1.5));
  s.distance+=dt*speed(s);updateThreats(s,dt,obstacles);
  // Consume whole bars on distance milestones. Pickups add one bar, capped at three.
  while(s.distance>=s.nextDrain){s.charge=Math.max(0,s.charge-1);s.nextDrain+=200;}
- for(const o of obstacles)if(o.kind==='battery'&&!o.collected&&Math.abs(o.x-s.distance)<.95&&Math.abs(s.y-o.y)<.95){o.collected=true;s.charge=Math.min(3,s.charge+1);}
+ for(const o of obstacles)if(o.kind==='battery'&&!o.collected&&Math.abs(o.x-s.distance)<.95&&Math.abs(s.y-o.y)<.95){o.collected=true;s.batteriesCollected++;s.charge=Math.min(3,s.charge+1);}
  if(s.charge===0){crash(s);return false;}
  s.invulnerable=Math.max(0,s.invulnerable-dt);s.vy+=(thrust?12:-8.5)*dt;s.vy*=Math.exp(-.85*dt);s.vy=Math.max(-5.4,Math.min(4.8,s.vy));s.y+=s.vy*dt;
  if(s.y-RADIUS<FLOOR){hit=damage(s,-1);s.y=FLOOR+RADIUS;if(s.mode==='playing')s.vy=Math.max(1.6,s.vy);}else if(s.y+RADIUS>CEILING){hit=damage(s,1);s.y=CEILING-RADIUS;if(s.mode==='playing')s.vy=Math.min(-1.6,s.vy);}

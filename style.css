@@ -14,8 +14,8 @@ html,body,#game,#game *{-webkit-user-select:none;user-select:none;-webkit-touch-
 
 .intro-slogan{position:absolute;left:45%;top:39.5%;width:52%;pointer-events:none;perspective:900px}
 .slogan-lines span{display:block;width:max-content;max-width:100%;font-size:clamp(26px,3.9vw,74px);font-weight:800;line-height:1.55;letter-spacing:-.05em;white-space:nowrap;color:#f5fbf7;text-shadow:2px 3px 0 #164b2a,4px 6px 0 #0b2315,0 9px 24px #000b;transform-origin:left center;animation:layered-shift 5.4s ease-in-out infinite}
-.slogan-lines span:nth-child(2){color:var(--accent);animation-delay:-1.8s}
-.slogan-lines span:nth-child(3){animation-delay:-3.6s}
+.slogan-lines span:nth-child(3){color:var(--accent);animation-delay:-1.8s}
+.slogan-lines span:nth-child(4){animation-delay:-3.6s}
 @keyframes layered-shift{0%,100%{transform:translateX(0) skew(0deg,-13deg) scaleY(1)}50%{transform:translateX(18px) skew(22deg,-13deg) scaleY(.78)}}
 @media(max-width:600px){.intro-slogan{left:8vw;top:61%;width:87vw}.slogan-lines span{font-size:clamp(18px,5vw,30px);line-height:1.42}.studio-badge{bottom:max(4vh,env(safe-area-inset-bottom))}}
 @media(max-height:500px) and (min-width:601px){.intro-slogan{top:35.5%}.slogan-lines span{font-size:clamp(20px,3vw,42px);line-height:1.35}}
@@ -23,3 +23,5 @@ html,body,#game,#game *{-webkit-user-select:none;user-select:none;-webkit-touch-
 
 #sound svg{display:block;width:22px;height:22px;margin:auto}#sound .sound-off{display:none}#sound.is-muted .sound-waves{display:none}#sound.is-muted .sound-off{display:block}#paused .panel h2{margin:0 0 28px;line-height:1.2}
 
+
+.slogan-lines .prize-line{color:var(--accent);margin-bottom:.25em;animation-delay:-.9s}
